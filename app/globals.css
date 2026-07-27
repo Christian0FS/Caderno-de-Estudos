@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-line;
+  }
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  :focus-visible {
+    outline: 2px solid theme("colors.moss.DEFAULT");
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .sheet {
+    @apply bg-card border border-line rounded-sheet shadow-card;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sheet bg-moss px-4 py-2.5
+           text-sm font-semibold text-paper-alt transition-colors hover:bg-moss-dark
+           disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sheet border border-line
+           bg-card px-4 py-2.5 text-sm font-semibold text-ink transition-colors
+           hover:border-moss hover:text-moss;
+  }
+  .field-label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft;
+  }
+  .field-input {
+    @apply w-full rounded-sheet border border-line bg-paper-alt px-3 py-2 text-sm text-ink
+           placeholder:text-ink-soft/60 focus:border-moss focus:outline-none focus:ring-1
+           focus:ring-moss transition-colors;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

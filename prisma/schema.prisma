@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Uma matéria/assunto de estudo (ex: "Cálculo I", "React", "Inglês")
+model Subject {
+  id        Int            @id @default(autoincrement())
+  name      String         @unique
+  color     String         @default("#3D5A45")
+  createdAt DateTime       @default(now())
+  sessions  StudySession[]
+  schedules ScheduleItem[]
+}
+
+// Um registro de conteúdo estudado (o que foi estudado, quando, por quanto tempo)
+model StudySession {
+  id        Int      @id @default(autoincrement())
+  subjectId Int
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  date      DateTime
+  duration  Int // duração em minutos
+  content   String // o que foi estudado
+  notes     String? // observações opcionais
+  createdAt DateTime @default(now())
+
+  @@index([date])
+  @@index([subjectId])
+}
+
+// Um bloco na agenda/calendário de estudos (recorrente semanal ou de data específica)
+model ScheduleItem {
+  id        Int      @id @default(autoincrement())
+  subjectId Int
+  subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  title     String? // ex: "Revisão para a prova"
+  dayOfWeek Int? // 0 (domingo) a 6 (sábado) — usado quando recurring = true
+  date      DateTime? // data específica — usado quando recurring = false
+  startTime String // "HH:mm"
+  endTime   String // "HH:mm"
+  recurring Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@index([dayOfWeek])
+}
