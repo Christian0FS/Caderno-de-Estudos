@@ -31,6 +31,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className={`${fraunces.variable} ${plexSans.variable} ${plexMono.variable}`}>
       <head>
+        <link rel="icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');if(!t){var p=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;t=p?'dark':'light';}if(t==='dark'){document.documentElement.setAttribute('data-theme','dark');} }catch(e){}})()` }} />
       </head>
       <body>
