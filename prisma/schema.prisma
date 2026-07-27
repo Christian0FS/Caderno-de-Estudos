@@ -7,34 +7,49 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Visibility {
+  private
+  shared
+}
+
 // Uma matéria/assunto de estudo (ex: "Cálculo I", "React", "Inglês")
 model Subject {
   id        Int            @id @default(autoincrement())
   name      String         @unique
   color     String         @default("#3D5A45")
+  userId    Int
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime       @default(now())
   sessions  StudySession[]
   schedules ScheduleItem[]
+
+  @@index([userId])
 }
 
 // Um registro de conteúdo estudado (o que foi estudado, quando, por quanto tempo)
 model StudySession {
   id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   subjectId Int
   subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   date      DateTime
   duration  Int // duração em minutos
   content   String // o que foi estudado
   notes     String? // observações opcionais
+  visibility Visibility @default(private)
   createdAt DateTime @default(now())
 
   @@index([date])
   @@index([subjectId])
+  @@index([userId])
 }
 
 // Um bloco na agenda/calendário de estudos (recorrente semanal ou de data específica)
 model ScheduleItem {
   id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   subjectId Int
   subject   Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
   title     String? // ex: "Revisão para a prova"
@@ -45,5 +60,37 @@ model ScheduleItem {
   recurring Boolean  @default(true)
   createdAt DateTime @default(now())
 
+  @@index([userId])
   @@index([dayOfWeek])
+}
+
+// Usuário da aplicação
+model User {
+  id                    Int            @id @default(autoincrement())
+  name                  String
+  email                 String         @unique
+  passwordHash          String
+  createdAt             DateTime       @default(now())
+  forcePasswordChange   Boolean        @default(false)
+
+  subjects              Subject[]
+  sessions              StudySession[]
+  schedules             ScheduleItem[]
+  requesterConnections  Connection[]   @relation("requester")
+  receiverConnections   Connection[]   @relation("receiver")
+
+}
+
+// Conexões entre usuários (pedido/aceitação)
+model Connection {
+  id          Int      @id @default(autoincrement())
+  requesterId Int
+  receiverId  Int
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+
+  requester User @relation("requester", fields: [requesterId], references: [id])
+  receiver  User @relation("receiver", fields: [receiverId], references: [id])
+
+  @@unique([requesterId, receiverId])
 }

@@ -7,25 +7,25 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        paper: "#EDEFE9",
-        "paper-alt": "#F7F8F4",
-        card: "#FFFFFF",
-        ink: "#1F2A24",
-        "ink-soft": "#4B5750",
+        paper: "var(--color-paper)",
+        "paper-alt": "var(--color-paper-alt)",
+        card: "var(--color-card)",
+        ink: "var(--color-ink)",
+        "ink-soft": "var(--color-ink-soft)",
         moss: {
-          DEFAULT: "#3D5A45",
-          dark: "#2C4433",
-          light: "#5C7C63",
+          DEFAULT: "var(--color-moss)",
+          dark: "var(--color-moss-dark)",
+          light: "var(--color-moss-light)",
         },
         gold: {
-          DEFAULT: "#C9A227",
-          light: "#E4C567",
+          DEFAULT: "var(--color-gold)",
+          light: "var(--color-gold-light)",
         },
         brick: {
-          DEFAULT: "#B5533C",
-          light: "#D98868",
+          DEFAULT: "var(--color-brick)",
+          light: "var(--color-brick-light)",
         },
-        line: "#D8DBCF",
+        line: "var(--color-line)",
       },
       fontFamily: {
         display: ["var(--font-fraunces)", "Georgia", "serif"],

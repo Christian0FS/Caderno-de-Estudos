@@ -1,21 +1,50 @@
 "use client";
 
 import { useState } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, NotebookPen, CalendarRange, BarChart3, Menu, X } from "lucide-react";
+import { Moon, Sun, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const links = [
   { href: "/", label: "Painel", icon: LayoutDashboard },
   { href: "/log", label: "Registro", icon: NotebookPen },
   { href: "/calendar", label: "Agenda", icon: CalendarRange },
   { href: "/stats", label: "Estatísticas", icon: BarChart3 },
+  { href: "/feed", label: "Feed", icon: LayoutDashboard },
+  { href: "/search", label: "Buscar", icon: NotebookPen },
+  { href: "/connections", label: "Conexões", icon: BarChart3 },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [theme, setTheme] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved) {
+        setTheme(saved);
+      } else {
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setTheme(prefersDark ? 'dark' : 'light');
+      }
+    } catch (e) {}
+  }, []);
+
+  useEffect(() => {
+    if (!theme) return;
+    try {
+      if (theme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      else document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('theme', theme);
+    } catch (e) {}
+  }, [theme]);
 
   return (
     <>
@@ -93,7 +122,28 @@ export default function Navbar() {
           })}
         </ul>
         <div className="px-6 py-6 text-xs text-ink-soft/70 font-mono">
-          uma matéria por vez.
+          <div className="flex items-center justify-between">
+            <span>uma matéria por vez.</span>
+            <div className="flex items-center gap-2">
+              <button
+                aria-label="Alternar tema"
+                onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+                className="p-2 rounded-sheet border border-line bg-card"
+              >
+                {theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+              </button>
+              <button
+                aria-label="Sair"
+                onClick={async () => {
+                  await fetch('/api/auth/logout', { method: 'POST' });
+                  router.push('/login');
+                }}
+                className="p-2 rounded-sheet border border-line bg-card"
+              >
+                <LogOut size={14} />
+              </button>
+            </div>
+          </div>
         </div>
       </aside>
     </>

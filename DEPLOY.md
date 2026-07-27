@@ -33,20 +33,34 @@ git push -u origin main
 2. Escolha o plano **Free**
 3. A Vercel cria o banco e já registra a variável de ambiente `DATABASE_URL` no seu projeto automaticamente — você não precisa copiar nada na mão
 
-## 4. Sincronize o schema com o banco
+## 4. Defina as variáveis de ambiente
 
-Agora o Prisma precisa criar as tabelas (`Subject`, `StudySession`, `ScheduleItem`) dentro do banco Neon. O jeito mais simples:
+O projeto precisa de duas variáveis chaves no ambiente de produção:
+
+- `DATABASE_URL`: URL do Postgres Neon
+- `JWT_SECRET`: segredo usado para assinar os tokens JWT (não deixe em branco em produção)
+
+Se você usar a integração Neon da Vercel, o `DATABASE_URL` geralmente é configurado automaticamente.
+
+Se precisar configurar manualmente, no painel do projeto Vercel vá em **Settings → Environment Variables** e adicione:
+
+- `DATABASE_URL` = `postgres://...`
+- `JWT_SECRET` = `uma-senha-forte-e-secreta`
+
+## 5. Sincronize o schema com o banco
+
+Agora o Prisma precisa criar as tabelas (`Subject`, `StudySession`, `ScheduleItem`, etc.) dentro do banco Neon. O jeito mais simples:
 
 ```bash
 npm install -g vercel      # CLI da Vercel, se ainda não tiver
 vercel link                # conecta a pasta local ao projeto que você criou no site
-vercel env pull .env       # puxa a DATABASE_URL real pro seu .env local
+vercel env pull .env.local # puxa as variáveis do projeto Vercel pro seu .env local
 npx prisma db push         # cria as tabelas no banco de produção
 ```
 
-Depois disso, se rodar `npm run dev` localmente, seu ambiente local vai estar usando o **mesmo banco** de produção — ótimo pra um projeto pessoal (um usuário só, sem ambiente de teste separado).
+Depois disso, se rodar `npm run dev` localmente com `.env.local`, seu ambiente local vai usar o **mesmo banco** de produção — útil para um projeto pessoal.
 
-## 5. Deploy
+## 6. Deploy
 
 Clique em **Deploy** no site da Vercel (ou, se já tinha feito deploy antes do passo 4, vá em **Deployments → ⋯ → Redeploy**).
 

@@ -1,0 +1,2 @@
+-- Baseline migration to mark current schema as applied.
+-- This file intentionally left blank because the database is already in sync (created with `prisma db push`).

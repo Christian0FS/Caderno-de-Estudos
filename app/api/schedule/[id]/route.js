@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getUserFromReq } from "@/lib/auth";
 
 export async function DELETE(request, { params }) {
+  const me = getUserFromReq(request);
+  if (!me) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+
   const id = Number(params.id);
+  const existing = await prisma.scheduleItem.findUnique({ where: { id } });
+  if (!existing) return NextResponse.json({ error: "Registro não encontrado." }, { status: 404 });
+  if (existing.userId !== Number(me.id)) return NextResponse.json({ error: "Sem permissão." }, { status: 403 });
+
   await prisma.scheduleItem.delete({ where: { id } });
   return NextResponse.json({ ok: true });
 }

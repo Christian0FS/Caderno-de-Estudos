@@ -2,18 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme variables: default (light) and dark overrides */
+:root {
+  --color-paper: #EDEFE9;
+  --color-paper-alt: #F7F8F4;
+  --color-card: #FFFFFF;
+  --color-ink: #1F2A24;
+  --color-ink-soft: #4B5750;
+  --color-moss: #3D5A45;
+  --color-moss-dark: #2C4433;
+  --color-moss-light: #5C7C63;
+  --color-gold: #C9A227;
+  --color-gold-light: #E4C567;
+  --color-brick: #B5533C;
+  --color-brick-light: #D98868;
+  --color-line: #D8DBCF;
+}
+
+[data-theme="dark"] {
+  --color-paper: #0F1621;
+  --color-paper-alt: #141C2B;
+  --color-card: #182238;
+  --color-ink: #E7EAF0;
+  --color-ink-soft: #8D97AC;
+  --color-moss: #3B5B8C; /* azul-marinho primário */
+  --color-moss-dark: #2f476a;
+  --color-moss-light: #5478B5;
+  --color-gold: #C9A227;
+  --color-gold-light: #E4C567;
+  --color-brick: #B5533C;
+  --color-brick-light: #D98868;
+  --color-line: #293350;
+}
+
 @layer base {
   * {
-    @apply border-line;
+    /* avoid accidental @apply using color vars */
   }
   body {
-    @apply bg-paper text-ink font-body antialiased;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-plex-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   h1, h2, h3, h4 {
     @apply font-display;
   }
   :focus-visible {
-    outline: 2px solid theme("colors.moss.DEFAULT");
+    outline: 2px solid var(--color-moss);
     outline-offset: 2px;
   }
 }
@@ -37,7 +74,7 @@
   }
   .field-input {
     @apply w-full rounded-sheet border border-line bg-paper-alt px-3 py-2 text-sm text-ink
-           placeholder:text-ink-soft/60 focus:border-moss focus:outline-none focus:ring-1
+           placeholder:text-ink-soft focus:border-moss focus:outline-none focus:ring-1
            focus:ring-moss transition-colors;
   }
 }

@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getUserFromReq } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(request) {
+  const me = getUserFromReq(request);
+  if (!me) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+
   const items = await prisma.scheduleItem.findMany({
+    where: { userId: Number(me.id) },
     include: { subject: true },
     orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
   });
@@ -10,6 +15,9 @@ export async function GET() {
 }
 
 export async function POST(request) {
+  const me = getUserFromReq(request);
+  if (!me) return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
+
   const body = await request.json();
   const { subjectId, title, dayOfWeek, date, startTime, endTime, recurring } = body;
 
@@ -34,6 +42,7 @@ export async function POST(request) {
 
   const item = await prisma.scheduleItem.create({
     data: {
+      userId: Number(me.id),
       subjectId: Number(subjectId),
       title: title?.trim() || null,
       recurring: !!recurring,
