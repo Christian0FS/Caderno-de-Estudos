@@ -1,6 +1,6 @@
-'use client'
+"use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
@@ -9,6 +9,16 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState(null);
   const router = useRouter();
+
+  // If already authenticated (cookie present), redirect to home
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) router.replace('/');
+      } catch (e) {}
+    })();
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -59,11 +69,12 @@ export default function LoginPage() {
           <input id="remember" type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
           <label htmlFor="remember" className="text-sm">Lembrar de mim</label>
         </div>
-        <div>
-          <button className="btn-primary" type="submit">Entrar</button>
+        <div className="flex gap-3">
+          <button className="btn-primary flex-1" type="submit">Entrar</button>
+          <button type="button" className="btn-secondary flex-1" onClick={() => router.push('/signup')}>Cadastrar</button>
         </div>
         <p className="text-sm text-ink-soft">
-          Ainda não tem conta? <a href="/signup" className="text-moss hover:underline">Cadastre-se</a>
+          Ou use os botões acima para entrar ou cadastrar uma nova conta.
         </p>
       </form>
     </div>

@@ -51,13 +51,13 @@ export default function Navbar() {
       {/* Topo mobile */}
       <div className="md:hidden flex items-center justify-between px-4 py-4 border-b border-line bg-paper-alt sticky top-0 z-30">
         <span className="flex items-center gap-2 font-display text-lg font-semibold italic text-moss-dark">
-          <Image src="/logo.png" alt="" width={28} height={28} className="rounded-md" />
+          <img src="/logo.png" alt="Logo Caderno de Estudos" width={28} height={28} className="rounded-md" />
           Caderno de Estudos
         </span>
         <button
           onClick={() => setOpen((v) => !v)}
           aria-label={open ? "Fechar menu" : "Abrir menu"}
-          className="p-2 rounded-sheet border border-line"
+          className="p-2 rounded-sheet border border-line bg-card transition-all duration-200 ease-out"
         >
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
@@ -72,8 +72,8 @@ export default function Navbar() {
                   <Link
                     href={href}
                     onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 rounded-sheet px-3 py-2.5 text-sm font-medium transition-colors ${
-                      active ? "bg-moss text-paper-alt" : "text-ink hover:bg-card"
+                    className={`flex items-center gap-3 rounded-sheet px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-out ${
+                      active ? "bg-moss text-paper-alt shadow-card" : "text-ink hover:bg-card"
                     }`}
                   >
                     <Icon size={18} />
@@ -87,10 +87,10 @@ export default function Navbar() {
       )}
 
       {/* Sidebar desktop */}
-      <aside className="hidden md:flex md:flex-col md:w-60 md:shrink-0 md:border-r md:border-line md:bg-paper-alt md:min-h-screen md:sticky md:top-0">
+      <aside className="hidden md:flex md:flex-col md:w-60 md:shrink-0 md:border-r md:border-line md:min-h-screen md:sticky md:top-0 sidebar">
         <div className="px-6 pt-8 pb-6">
           <p className="flex items-center gap-2.5 font-display italic text-xl font-semibold text-moss-dark leading-tight">
-            <Image src="/logo.png" alt="" width={34} height={34} className="rounded-md shrink-0" />
+            <img src="/logo.png" alt="Logo Caderno de Estudos" width={34} height={34} className="rounded-md shrink-0" />
             <span>
               Caderno de
               <br />
@@ -108,7 +108,7 @@ export default function Navbar() {
                 )}
                 <Link
                   href={href}
-                  className={`flex items-center gap-3 rounded-sheet px-3 py-2.5 text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-3 rounded-sheet px-3 py-2.5 text-sm font-medium transition-all duration-200 ease-out ${
                     active
                       ? "bg-moss text-paper-alt shadow-card"
                       : "text-ink-soft hover:bg-card hover:text-ink"

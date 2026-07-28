@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  color-scheme: light;
+  transition: color 0.35s ease, background-color 0.35s ease;
+}
+
 /* Theme variables: default (light) and dark overrides */
 :root {
   --color-paper: #EDEFE9;
@@ -17,6 +22,9 @@
   --color-brick: #B5533C;
   --color-brick-light: #D98868;
   --color-line: #D8DBCF;
+  --color-nav: #F2F4F0;
+  --color-nav-text: var(--color-ink);
+  --color-nav-text-soft: rgba(31,42,36,0.78);
 }
 
 [data-theme="dark"] {
@@ -33,6 +41,9 @@
   --color-brick: #B5533C;
   --color-brick-light: #D98868;
   --color-line: #293350;
+  --color-nav: #0D1A26;
+  --color-nav-text: var(--color-ink);
+  --color-nav-text-soft: rgba(231,234,240,0.85);
 }
 
 @layer base {
@@ -45,6 +56,10 @@
     font-family: var(--font-plex-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+  body, main, header, nav, aside, .sheet, .btn-primary, .btn-secondary, .field-input, button, input, textarea, select {
+    transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, fill 0.35s ease, stroke 0.35s ease;
   }
   h1, h2, h3, h4 {
     @apply font-display;
@@ -53,29 +68,81 @@
     outline: 2px solid var(--color-moss);
     outline-offset: 2px;
   }
+
+  /* Sidebar specific background to contrast with page background */
+  aside.sidebar {
+    background-color: var(--color-nav, var(--color-paper-alt));
+    color: var(--color-nav-text, var(--color-ink));
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+
+  aside.sidebar a, aside.sidebar button, aside.sidebar p, aside.sidebar span {
+    color: inherit;
+  }
+
+  /* Override semantic color variables inside the sidebar so Tailwind utilities map to the right contrast */
+  aside.sidebar {
+    --color-ink: var(--color-nav-text);
+    --color-ink-soft: var(--color-nav-text-soft);
+  }
+}
+
+.animated-page {
+  animation: fadeSlideIn 0.35s ease-out both;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @layer components {
   .sheet {
     @apply bg-card border border-line rounded-sheet shadow-card;
+    will-change: transform, box-shadow;
+    transition: transform 220ms cubic-bezier(.2,.9,.2,1), box-shadow 220ms ease, background-color 220ms ease;
+  }
+  .sheet:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
   }
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 rounded-sheet bg-moss px-4 py-2.5
-           text-sm font-semibold text-paper-alt transition-colors hover:bg-moss-dark
+           text-sm font-semibold text-paper-alt
            disabled:opacity-50 disabled:pointer-events-none;
+    transform-origin: center;
+    transition: transform 160ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms ease, background-color 160ms ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  }
+  .btn-primary:active {
+    transform: translateY(0) scale(0.995);
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-sheet border border-line
-           bg-card px-4 py-2.5 text-sm font-semibold text-ink transition-colors
-           hover:border-moss hover:text-moss;
-  }
+      @apply inline-flex items-center justify-center gap-2 rounded-sheet border border-line
+        bg-card px-4 py-2.5 text-sm font-semibold text-ink
+        hover:border-moss hover:text-moss;
+      transform-origin: center;
+      transition: transform 160ms cubic-bezier(.2,.9,.2,1), box-shadow 160ms ease, border-color 160ms ease;
+    }
+    .btn-secondary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+    .btn-secondary:active { transform: translateY(0) scale(0.997); }
   .field-label {
     @apply mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-soft;
   }
   .field-input {
     @apply w-full rounded-sheet border border-line bg-paper-alt px-3 py-2 text-sm text-ink
            placeholder:text-ink-soft focus:border-moss focus:outline-none focus:ring-1
-           focus:ring-moss transition-colors;
+           focus:ring-moss;
+    transition: box-shadow 160ms ease, border-color 160ms ease, background-color 160ms ease;
   }
 }
 

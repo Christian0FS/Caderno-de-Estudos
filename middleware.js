@@ -20,6 +20,7 @@ export function middleware(req) {
         pathname === '/favicon.ico' ||
         pathname === '/apple-icon.png' ||
         pathname === '/icon.png' ||
+        pathname === '/logo.png' ||
         pathname.startsWith('/login') ||
         pathname.startsWith('/signup') ||
         pathname.startsWith('/change-password')
@@ -53,5 +54,5 @@ export function middleware(req) {
 }
 
 export const config = {
-    matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+    matcher: ['/((?!_next/static|_next/image|favicon.ico|apple-touch-icon.png|icon.png|logo.png).*)'],
 };
